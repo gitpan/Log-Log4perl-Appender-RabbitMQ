@@ -1,5 +1,12 @@
-Build.pl
-lib/Log/Log4perl/Appender/RabbitMQ.pm
-MANIFEST			This list of files
-README
+LICENSE
+MANIFEST
 META.yml
+Makefile.PL
+README
+dist.ini
+lib/Log/Log4perl/Appender/RabbitMQ.pm
+t/author-critic.t
+t/end_to_end.t
+t/init_failure.t
+t/release-pod-coverage.t
+t/release-pod-syntax.t

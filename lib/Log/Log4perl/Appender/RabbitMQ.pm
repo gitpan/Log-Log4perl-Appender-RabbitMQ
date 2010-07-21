@@ -1,11 +1,13 @@
-package Log::Log4perl::Appender::RabbitMQ;
-##################################################
+# ABSTRACT: Log to RabbitMQ
 
 use 5.008008;
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+package Log::Log4perl::Appender::RabbitMQ;
+BEGIN {
+  $Log::Log4perl::Appender::RabbitMQ::VERSION = '0.102020';
+}
 
 our @ISA = qw/ Log::Log4perl::Appender /;
 
@@ -165,11 +167,17 @@ sub log {
 
 1;
 
-__END__
+
+
+=pod
 
 =head1 NAME
 
 Log::Log4perl::Appender::RabbitMQ - Log to RabbitMQ
+
+=head1 VERSION
+
+version 0.102020
 
 =head1 SYNOPSIS
 
@@ -195,7 +203,7 @@ Log::Log4perl::Appender::RabbitMQ - Log to RabbitMQ
 This is a L<Log::Log4perl> appender for publishing log messages to RabbitMQ group using L<Net::RabbitMQ>.
 Defaults for unspecified options are provided by L<Net::RabbitMQ> and can be found in it's documentation.
 
-=head2 OPTIONS
+=head1 CONFIG OPTIONS
 
 All of the following options can be passed to the constructor, or be specified in the Log4perl config file. Unless otherwise
 stated, any options not specified will get whatever defaults L<Net::RabbitMQ> provides. See the documentation for that module
@@ -281,15 +289,31 @@ boolean. Flag published messages immediate.
 
 =back
 
+=head1 METHODS
+
+This is a subclass of L<Log::Log4perl::Appender>. It overrides the following methods:
+
+=over 4
+
+=item new
+
+=item log
+
+=back
+
 =head1 AUTHOR
 
-Trevor J. Little, E<lt>bundacia@tjlittle.comE<gt>
+Trevor Little <bundacia@tjlittle.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2010 by Trevor J. Little
+This software is copyright (c) 2010 by Trevor Little.
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+
+__END__
+
