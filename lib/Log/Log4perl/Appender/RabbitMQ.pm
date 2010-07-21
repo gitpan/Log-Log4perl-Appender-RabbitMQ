@@ -5,7 +5,7 @@ use 5.008008;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our @ISA = qw/ Log::Log4perl::Appender /;
 
@@ -14,19 +14,43 @@ use Readonly;
 
 Readonly my $CHANNEL => 1;
 
+my $RabbitMQClass = 'Net::RabbitMQ';
+
 ##################################################
 sub new {
 ##################################################
     my($class, %args) = @_;
 
+    # For testing use the Test::Net::RabbitMQ class
+    if ($args{TESTING}) {
+        $RabbitMQClass = 'Test::Net::RabbitMQ';
+        require Test::Net::RabbitMQ;
+    }
+
     my $self = bless {
         host        => $args{host}        || 'localhost',
         routing_key => $args{routing_key} || '%c'       ,
+        declare_exchange => $args{declare_exchange},
     }, $class;
 
     # set a flag that tells us to do routing_key interpolation
     # only if there are things to interpolate.
     $self->{interpolate_routing_key} = 1 if $self->{routing_key} =~ /%c|%p/;
+
+    # Store any given exchange options for declaring an exchange
+    my %exchange_options;
+    for my $name (qw/
+        exchange_type
+        passive_exchange
+        durable_exchange
+        auto_delete_exchange
+    /) {
+        # convert from the param name we require in args to the name
+        # exchange_declare() will look for by stripping off the _exchange
+        (my $declare_param_name = $name) =~ s/(.*)_exchange$/$1/;
+        $exchange_options{$declare_param_name} = $args{$name} if exists $args{$name};
+    }
+    $self->{exchange_options} = \%exchange_options;
 
     # Store any given publish options for use when log is called
     my %publish_options;
@@ -56,6 +80,14 @@ sub new {
     # Create a new connection
     eval {
         @{$self}{qw(mq channel)} = _connect_cached($self->{host}, \%connect_options);
+
+        # declare the exchange if declare_exchange is set
+        $self->{mq}->exchange_declare(
+            $CHANNEL, 
+            $self->{publish_options}{exchange}, 
+            $self->{exchange_options},
+        ) if $self->{declare_exchange};
+
         1;
     } or do {
         warn "ERROR creating $class: $@\n";
@@ -86,7 +118,7 @@ sub new {
         return $connection_cache{$cache_key} if $connection_cache{$cache_key};
 
         # Create new RabbitMQ object & connection, open channel 1
-        my $mq = Net::RabbitMQ->new();
+        my $mq = $RabbitMQClass->new();
         $mq->connect($host, $connect_options);
         $mq->channel_open($CHANNEL);
 
@@ -169,7 +201,7 @@ All of the following options can be passed to the constructor, or be specified i
 stated, any options not specified will get whatever defaults L<Net::RabbitMQ> provides. See the documentation for that module
 for more details.
 
-=head3 Connetion Options
+=head3 Connection Options
 
 These options are used in the call to L<Net::RabbitMQ::connect()|Net::RabbitMQ/"methods"> when the appender is created.
 
@@ -178,6 +210,10 @@ These options are used in the call to L<Net::RabbitMQ::connect()|Net::RabbitMQ/"
 =item user
 
 =item password
+
+=item host
+
+Defaults to localhost.
 
 =item port
 
@@ -191,7 +227,33 @@ These options are used in the call to L<Net::RabbitMQ::connect()|Net::RabbitMQ/"
 
 =back
 
-=head3 Publishing Options
+=head3 Exchange Options
+
+Except for L<declare_exchange>, these options are used in a call to L<Net::RabbitMQ::exchange_declare()|Net::RabbitMQ/"methods"> to declare the
+exchange specified on the L<exchange> option (See L<Publish Options>).
+If L<declare_exchange> is false (the default) the exchange will not be declared and must already exist.
+
+=over 4
+
+=item declare_exchange
+
+Declare the exchange, or just trust that it already exists? Boolean, defaults to 0.
+
+=item exchange_type
+
+'direct, 'topic', etc. Boolean, defaults to 0.
+
+=item durable_exchange
+
+Should the exchange survive a restart? Boolean, defaults to 0.
+
+=item auto_delete_exchange
+
+Delete the exchange when this proccess disconnects? Boolean, defaults to 1.
+
+=back
+
+=head3 Publish Options
 
 These options are used in the call to L<Net::RabbitMQ::publish()|Net::RabbitMQ/"methods"> for each message.
 

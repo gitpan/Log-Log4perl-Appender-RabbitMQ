@@ -10,7 +10,12 @@ my $build = Module::Build->new(
     license  => 'perl',
     requires => {
         'perl'           => '5.6.1',
-        'Net::RabbitMQ'  => '>= 0.1.5',
+        'Net::RabbitMQ'  => '0.1.5',
+    },
+    build_requires => {
+        'Test::Net::RabbitMQ' => 0,
+        'Test::More'          => 0,
+        'Test::Output'        => 0,
     },
     create_readme   => 1,
     create_install  => 1,
