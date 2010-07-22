@@ -6,7 +6,7 @@ use warnings;
 
 package Log::Log4perl::Appender::RabbitMQ;
 BEGIN {
-  $Log::Log4perl::Appender::RabbitMQ::VERSION = '0.102020';
+  $Log::Log4perl::Appender::RabbitMQ::VERSION = '0.102030';
 }
 
 our @ISA = qw/ Log::Log4perl::Appender /;
@@ -177,7 +177,7 @@ Log::Log4perl::Appender::RabbitMQ - Log to RabbitMQ
 
 =head1 VERSION
 
-version 0.102020
+version 0.102030
 
 =head1 SYNOPSIS
 
