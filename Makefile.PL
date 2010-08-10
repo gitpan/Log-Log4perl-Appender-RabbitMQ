@@ -29,7 +29,7 @@ my %WriteMakefileArgs = (
     'Readonly' => '0',
     'Test::Net::RabbitMQ' => '0'
   },
-  'VERSION' => '0.102030',
+  'VERSION' => '0.102220',
   'test' => {
     'TESTS' => 't/*.t'
   }
