@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 package Log::Log4perl::Appender::RabbitMQ;
-$Log::Log4perl::Appender::RabbitMQ::VERSION = '0.141470';
+$Log::Log4perl::Appender::RabbitMQ::VERSION = '1.141470';
 our @ISA = qw/ Log::Log4perl::Appender /;
 
 use Net::AMQP::RabbitMQ 0.004002;
@@ -177,7 +177,7 @@ Log::Log4perl::Appender::RabbitMQ - Log to RabbitMQ
 
 =head1 VERSION
 
-version 0.141470
+version 1.141470
 
 =head1 SYNOPSIS
 

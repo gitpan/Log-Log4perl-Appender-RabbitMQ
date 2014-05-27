@@ -24,4 +24,4 @@ requires:
   warnings: '0'
 resources:
   repository: git://github.com/bundacia/Log-Log4perl-Appender-RabbitMQ.git
-version: '0.141470'
+version: '1.141470'
