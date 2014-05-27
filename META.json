@@ -4,7 +4,7 @@
       "Trevor Little <bundacia@tjlittle.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.101900, CPAN::Meta::Converter version 2.101670",
+   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -16,23 +16,32 @@
    "prereqs" : {
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.31"
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Pod::Coverage::TrustPod" : "0",
+            "Test::CPAN::Changes" : "0.19",
+            "Test::Pod" : "1.41",
+            "Test::Pod::Coverage" : "1.08"
          }
       },
       "runtime" : {
          "requires" : {
-            "Net::RabbitMQ" : 0,
-            "Readonly" : 0,
-            "Test::Net::RabbitMQ" : 0,
-            "perl" : "5.008008"
+            "Net::AMQP::RabbitMQ" : "0.004002",
+            "Readonly" : "0",
+            "Test::Net::RabbitMQ" : "0.09",
+            "perl" : "5.008008",
+            "strict" : "0",
+            "warnings" : "0"
          }
       },
       "test" : {
          "requires" : {
-            "English" : 0,
-            "Log::Log4perl" : 0,
-            "Test::More" : 0,
-            "Test::Output" : 0
+            "Log::Log4perl" : "0",
+            "Test::More" : "0",
+            "Test::Output" : "0"
          }
       }
    },
@@ -44,6 +53,6 @@
          "web" : "http://github.com/bundacia/Log-Log4perl-Appender-RabbitMQ"
       }
    },
-   "version" : "0.102220"
+   "version" : "0.141470"
 }
 

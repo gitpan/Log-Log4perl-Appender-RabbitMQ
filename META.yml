@@ -1,0 +1,27 @@
+---
+abstract: 'Log to RabbitMQ'
+author:
+  - 'Trevor Little <bundacia@tjlittle.com>'
+build_requires:
+  Log::Log4perl: '0'
+  Test::More: '0'
+  Test::Output: '0'
+configure_requires:
+  ExtUtils::MakeMaker: '6.30'
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.120921'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: Log-Log4perl-Appender-RabbitMQ
+requires:
+  Net::AMQP::RabbitMQ: '0.004002'
+  Readonly: '0'
+  Test::Net::RabbitMQ: '0.09'
+  perl: '5.008008'
+  strict: '0'
+  warnings: '0'
+resources:
+  repository: git://github.com/bundacia/Log-Log4perl-Appender-RabbitMQ.git
+version: '0.141470'

@@ -5,18 +5,15 @@ use strict;
 use warnings;
 
 package Log::Log4perl::Appender::RabbitMQ;
-BEGIN {
-  $Log::Log4perl::Appender::RabbitMQ::VERSION = '0.102220';
-}
-
+$Log::Log4perl::Appender::RabbitMQ::VERSION = '0.141470';
 our @ISA = qw/ Log::Log4perl::Appender /;
 
-use Net::RabbitMQ;
+use Net::AMQP::RabbitMQ 0.004002;
 use Readonly;
 
 Readonly my $CHANNEL => 1;
 
-my $RabbitMQClass = 'Net::RabbitMQ';
+my $RabbitMQClass = 'Net::AMQP::RabbitMQ';
 
 ##################################################
 sub new {
@@ -140,7 +137,7 @@ sub log {
 
     my $mq = $self->{mq};
 
-    # do nothing if the Net::RabbitMQ object is missing
+    # do nothing if the Net::AMQP::RabbitMQ object is missing
     return unless $mq;
 
     # customize the routing key for this message by 
@@ -158,7 +155,7 @@ sub log {
         1;
     } or do {
         # If you got an error warn about it and clear the 
-        # Net::RabbitMQ object so we don't keep trying
+        # Net::AMQP::RabbitMQ object so we don't keep trying
         warn "ERROR logging to RabbitMQ via ".ref($self).": $@\n";
         $self->{mq} = undef;
     };
@@ -168,9 +165,11 @@ sub log {
 
 1;
 
-
+__END__
 
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -178,7 +177,7 @@ Log::Log4perl::Appender::RabbitMQ - Log to RabbitMQ
 
 =head1 VERSION
 
-version 0.102220
+version 0.141470
 
 =head1 SYNOPSIS
 
@@ -201,18 +200,23 @@ version 0.102220
 
 =head1 DESCRIPTION
 
-This is a L<Log::Log4perl> appender for publishing log messages to RabbitMQ group using L<Net::RabbitMQ>.
-Defaults for unspecified options are provided by L<Net::RabbitMQ> and can be found in it's documentation.
+This is a L<Log::Log4perl> appender for publishing log messages to RabbitMQ
+using L<Net::AMQP::RabbitMQ>.
+Defaults for unspecified options are provided by L<Net::AMQP::RabbitMQ> and
+can be found in it's documentation.
 
 =head1 CONFIG OPTIONS
 
-All of the following options can be passed to the constructor, or be specified in the Log4perl config file. Unless otherwise
-stated, any options not specified will get whatever defaults L<Net::RabbitMQ> provides. See the documentation for that module
-for more details.
+All of the following options can be passed to the constructor, or be
+specified in the Log4perl config file. Unless otherwise stated, any options
+not specified will get whatever defaults L<Net::AMQP::RabbitMQ> provides.
+See the documentation for that module for more details.
 
 =head3 Connection Options
 
-These options are used in the call to L<Net::RabbitMQ::connect()|Net::RabbitMQ/"methods"> when the appender is created.
+These options are used in the call to
+L<Net::AMQP::RabbitMQ::connect()|Net::AMQP::RabbitMQ/"Methods"> when the
+appender is created.
 
 =over 4
 
@@ -238,19 +242,23 @@ Defaults to localhost.
 
 =head3 Exchange Options
 
-Except for L<declare_exchange>, these options are used in a call to L<Net::RabbitMQ::exchange_declare()|Net::RabbitMQ/"methods"> to declare the
-exchange specified on the L<exchange> option (See L<Publish Options>).
-If L<declare_exchange> is false (the default) the exchange will not be declared and must already exist.
+Except for L<declare_exchange>, these options are used in a call to
+L<Net::AMQP::RabbitMQ::exchange_declare()|Net::AMQP::RabbitMQ/"Methods"> to
+declare the exchange specified on the L<exchange> option
+(See L<Publish Options>).
+If L<declare_exchange> is false (the default) the exchange will not be
+declared and must already exist.
 
 =over 4
 
 =item declare_exchange
 
-Declare the exchange, or just trust that it already exists? Boolean, defaults to 0.
+Declare the exchange, or just trust that it already exists?
+Boolean, defaults to 0.
 
 =item exchange_type
 
-'direct, 'topic', etc. Boolean, defaults to 0.
+'direct, 'topic', etc.
 
 =item durable_exchange
 
@@ -264,21 +272,25 @@ Delete the exchange when this proccess disconnects? Boolean, defaults to 1.
 
 =head3 Publish Options
 
-These options are used in the call to L<Net::RabbitMQ::publish()|Net::RabbitMQ/"methods"> for each message.
+These options are used in the call to
+L<Net::AMQP::RabbitMQ::publish()|Net::AMQP::RabbitMQ/"Methods"> for each
+message.
 
 =over 4
 
 =item routing_key
 
-The routing key for messages. If the routing key contains a C<%c> or a C<%p> it will 
-be interpolated for each message. C<%c> will be replaced with the Log4perl category.
+The routing key for messages. If the routing key contains a C<%c> or a C<%p>
+it will be interpolated for each message. C<%c> will be replaced with the
+Log4perl category.
 C<%p> will be replaces with the Log4perl priority.
 
 Defaults to C<%C>
 
 =item exchange
 
-The exchange to publish the message too. This exchange must already exist.
+The exchange to publish the message too. This exchange must already exist
+unless declare_exchange is set to true.
 
 =item mandatory
 
@@ -292,7 +304,8 @@ boolean. Flag published messages immediate.
 
 =head1 METHODS
 
-This is a subclass of L<Log::Log4perl::Appender>. It overrides the following methods:
+This is a subclass of L<Log::Log4perl::Appender>. It overrides the following
+methods:
 
 =over 4
 
@@ -308,13 +321,9 @@ Trevor Little <bundacia@tjlittle.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Trevor Little.
+This software is copyright (c) 2014 by Trevor Little.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-
